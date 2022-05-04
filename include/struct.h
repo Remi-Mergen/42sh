@@ -8,6 +8,8 @@
 #ifndef STRUCT_H_
     #define STRUCT_H_
 
+    struct mysh_s;
+
     ////////////////////////////////////////////////////////////
     /// \brief Store all env in a linked list
     ///
@@ -35,7 +37,7 @@
     ////////////////////////////////////////////////////////////
     typedef struct builtin_commands {
         char *command;
-        int (*fct_ptr)(char **, list_env_t *env);
+        int (*fct_ptr)(struct mysh_s *);
     } builtin_commands_t;
 
     ////////////////////////////////////////////////////////////
@@ -102,10 +104,10 @@
     /// \return Anything. It's a struct bro
     ///
     ////////////////////////////////////////////////////////////
-    typedef struct mysh {
-        list_commands_t *commands_list; //liste chainée de commandes
-        builtin_commands_t builtin_commands[5]; //Commandes builtin de base
-        list_env_t *env; //env sous forme de liste chainee
+    typedef struct mysh_s {
+        list_commands_t *commands_list;
+        builtin_commands_t builtin_commands[5];
+        list_env_t *env;
         int last_return_value;
         char *input;
         int error;
