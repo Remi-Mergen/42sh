@@ -13,6 +13,12 @@
 #include "prototype.h"
 #include "define.h"
 
+static int process_not_tty(mysh_t *mysh)
+{
+    size_t size = 0;
+    //TODO while(getline(&mysh->input, &size, stdin) != -1) {}
+}
+
 int main(int argc, UNUSED char **argv, char **env)
 {
     mysh_t *mysh = init_struct(env);
