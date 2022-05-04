@@ -19,6 +19,6 @@ char *get_input(void)
         minif("exit\n");
         exit(0);
     }
-    string[my_strlen(string) - 1] = '\0';
+    string[my_strlen(string)] = '\0';
     return string;
 }
