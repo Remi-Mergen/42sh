@@ -1,0 +1,17 @@
+*.a
+*#*
+*~*
+*.o
+a.out
+try/
+.vscode
+.history
+note.txt
+push.sh
+minishell
+hello
+*TODO*
+random.c
+segv.c
+crash
+mysh
