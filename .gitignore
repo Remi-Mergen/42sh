@@ -15,3 +15,4 @@ random.c
 segv.c
 crash
 mysh
+old/
