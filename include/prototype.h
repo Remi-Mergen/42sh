@@ -30,4 +30,14 @@
     ////////////////////////////////////////////////////////////
     int fork_to_exe(mysh_t *mysh);
 
+    ////////////////////////////////////////////////////////////
+    /// \brief Initialize the main struct
+    ///
+    /// \param env enviroment variables to store it
+    ///
+    /// \return Return the struct initialized successfully
+    ///
+    ////////////////////////////////////////////////////////////
+    mysh_t *init_struct(char **env);
+
 #endif /* !PROTOTYPE_H_ */
