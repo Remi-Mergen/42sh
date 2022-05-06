@@ -5,6 +5,8 @@
 ** my_cd
 */
 
+#include <sys/stat.h>
+#include <dirent.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "lib.h"
@@ -18,6 +20,26 @@ static int finder_in_env(mysh_t *mysh, char *word)
         if (my_strcmp(get_first_word(mysh->env[i], '='), word) == 0)
             break;
     return i;
+}
+
+static int cd_error(char *dir)
+{
+    DIR *dirptr;
+
+    if (access ( dir, F_OK ) != -1 ) {
+        if ((dirptr = opendir(dir)) != NULL) {
+            closedir (dirptr);
+        } else {
+            write(2, dir, my_strlen(dir));
+            write(2, ": Not a directory.\n", 19);
+            return 1;
+        }
+    } else {
+        write(2, dir, my_strlen(dir));
+        write(2, ": No such file or directory.\n", 29);
+        return 1;
+    };
+    return 0;
 }
 
 static int change_pwd(mysh_t *mysh)
@@ -64,5 +86,5 @@ int my_cd(mysh_t *mysh)
         return 0;
     }
     else
-        return 84;
+        return cd_error(mysh->input[1]);
 }
