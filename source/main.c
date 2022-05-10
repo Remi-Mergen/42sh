@@ -43,7 +43,7 @@ static int process_tty(mysh_t *mysh)
             return exit_code;
         if (my_strlen(input) == 1)
             continue;
-        input[my_strlen(input) - 1] = '\0';
+        input[my_strlen(input)] = '\0';
         mysh->input = commands(&input_array, input, exit_code);
         exit_code = fork_to_exe(mysh);
     }
@@ -59,7 +59,7 @@ static int process_not_tty(mysh_t *mysh)
     while (getline(&input, &size, stdin) != -1) {
         if (input == NULL || my_strlen(input) == 1)
             return exit_code;
-        input[my_strlen(input) - 1] = '\0';
+        input[my_strlen(input)] = '\0';
         mysh->input = commands(&input_array, input, exit_code);
         exit_code = fork_to_exe(mysh);
     }

@@ -42,23 +42,20 @@ static int cd_error(char *dir)
     return 0;
 }
 
-static int change_pwd(mysh_t *mysh)
+static void change_pwd(mysh_t *mysh)
 {
-    char *new_pwd = NULL;
+    char *new_pwd = getcwd(NULL, 0);
     char **old_pwd;
     int i = 0;
     int j = 0;
 
-    new_pwd = getcwd(new_pwd, 0);
-    if (new_pwd == NULL)
-        return 84;
     new_pwd = my_strcat("PWD=", new_pwd);
     i = finder_in_env(mysh, "PWD");
     j = finder_in_env(mysh, "OLDPWD");
     old_pwd = my_stwa(mysh->env[i], '=');
     mysh->env[j] = my_strcat("OLDPWD=", old_pwd[1]);
     mysh->env[i] = new_pwd;
-    return 0;
+    return;
 }
 
 int change_to_old_pwd(mysh_t *mysh)
@@ -81,8 +78,7 @@ int my_cd(mysh_t *mysh)
     if (mysh->input[1][0] == '-')
         return change_to_old_pwd(mysh);
     if (chdir(mysh->input[1]) == 0) {
-        if (change_pwd(mysh) == 84)
-            return 84;
+        change_pwd(mysh);
         return 0;
     }
     else
