@@ -43,7 +43,7 @@
     ////////////////////////////////////////////////////////////
     /// \brief Store all env in a linked list
     ///
-    /// \param env              char ** to store env ofr execve
+    /// \param env              char ** to store env for execve
     /// \param builtin          NULL if command is not a builtin
     /// \param path             NULL if builtin command, else path to execve
     /// \param output           output of the command
