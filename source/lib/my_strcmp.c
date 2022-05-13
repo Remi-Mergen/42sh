@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2022
-** PSU [WSL: Ubuntu]
+** 42sh
 ** File description:
 ** my_strcmp
 */
