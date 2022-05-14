@@ -7,6 +7,7 @@
 
 #include "struct.h"
 #include <stddef.h>
+#include <stdlib.h>
 int my_cd(mysh_t *mysh);
 int my_env(mysh_t *mysh);
 int my_setenv(mysh_t *mysh);
