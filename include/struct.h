@@ -17,8 +17,6 @@
     ///
     /// \param next   ptr to next element in the linked list
     ///
-    /// \return Anything. It's a struct bro
-    ///
     ////////////////////////////////////////////////////////////
     typedef struct list_env {
         char *data;
@@ -31,8 +29,6 @@
     /// \param command   char * to store the name of the command
     ///
     /// \param fct_ptr   ptr to command function
-    ///
-    /// \return Anything. It's a struct bro
     ///
     ////////////////////////////////////////////////////////////
     typedef struct builtin_commands {
@@ -55,8 +51,6 @@
     /// \param redirect_stdin   fd to redirect input
     /// \param eof              Should we write at the end of the file?
     /// \param heredoc          keyword to stop `<<` command
-    ///
-    /// \return Anything. It's a struct bro
     ///
     ////////////////////////////////////////////////////////////
     typedef struct command {
@@ -81,8 +75,6 @@
     ///
     /// \param next   ptr to next element in the linked list
     ///
-    /// \return Anything. It's a struct bro
-    ///
     ////////////////////////////////////////////////////////////
     typedef struct list_commands {
         command_t *command;
@@ -100,8 +92,6 @@
     /// \param error                Error handling in loop
     /// \param is_tty               Is it a terminal
     /// \param exit                 Store return value and used for error handling
-    ///
-    /// \return Anything. It's a struct bro
     ///
     ////////////////////////////////////////////////////////////
     typedef struct mysh_s {
