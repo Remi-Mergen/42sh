@@ -5,62 +5,56 @@
 ** my_cd
 */
 
+#include "lib.h"
+#include "define.h"
+#include "struct.h"
 #include <stdlib.h>
 #include <unistd.h>
-#include "lib.h"
-#include "struct.h"
 
-static int finder_in_env(mysh_t *mysh, char *word)
+static void change_pwd(mysh_t *mysh)
 {
-    int i = 0;
+    char *new_pwd = my_strcat("PWD=", getcwd(NULL, 0));
+    char *old_pwd = NULL;
 
-    for (; mysh->env[i]; ++i)
-        if (my_strcmp(get_first_word(mysh->env[i], '='), word) == 0)
-            break;
-    return i;
-}
-
-static int change_pwd(mysh_t *mysh)
-{
-    char *new_pwd = NULL;
-    char **old_pwd;
-    int i = 0;
-    int j = 0;
-
-    new_pwd = getcwd(new_pwd, 0);
-    if (new_pwd == NULL)
-        return 84;
-    new_pwd = my_strcat("PWD=", new_pwd);
-    i = finder_in_env(mysh, "PWD");
-    j = finder_in_env(mysh, "OLDPWD");
-    old_pwd = my_stwa(mysh->env[i], '=');
-    mysh->env[j] = my_strcat("OLDPWD=", old_pwd[1]);
-    mysh->env[i] = new_pwd;
-    return 0;
+    for (list_env_t *tmp = mysh->env; tmp; tmp = tmp->next) {
+        if (my_strncmp(tmp->data, "PWD", 3) == 0) {
+            old_pwd = tmp->data;
+            tmp->data = new_pwd;
+        }
+    }
+    for (list_env_t *tmp = mysh->env; tmp; tmp = tmp->next) {
+        if (my_strncmp(tmp->data, "OLDPWD", 6) == 0)
+            tmp->data = my_strcat("OLDPWD=", old_pwd);
+    }
 }
 
 int change_to_old_pwd(mysh_t *mysh)
 {
-    int i = finder_in_env(mysh, "OLDPWD");
-    int j = finder_in_env(mysh, "PWD");
-    char **old_pwd = my_stwa(mysh->env[i], '=');
+    char *old_pwd = my_stwa(get_in_env(mysh->env, "OLDPWD"), '=')[1];
 
-    if (chdir(old_pwd[1]) == -1)
-        return 84;
-    mysh->env[i] = my_strcat("OLDPWD=", getcwd(NULL, 0));
-    mysh->env[j] = my_strcat("PWD=", old_pwd[1]);
+    for (list_env_t *tmp = mysh->env; tmp; tmp = tmp->next) {
+        if (my_strncmp(tmp->data, "OLDPWD=",
+                                            my_strlen("OLDPWD=")) == 0)
+            tmp->data = my_strcat("OLDPWD=", getcwd(NULL, 0));
+    }
+    if (chdir(old_pwd) == -1)
+        return -1;
+    for (list_env_t *tmp = mysh->env; tmp; tmp = tmp->next) {
+        if (my_strncmp(tmp->data, "PWD=",
+                                            my_strlen("PWD=")) == 0)
+            tmp->data = my_strcat("PWD=", getcwd(NULL, 0));
+    }
     return 0;
 }
 
-int my_cd(mysh_t *mysh)
+int my_cd(mysh_t *mysh, UNUSED command_t *command)
 {
-    if (my_array_len(mysh->input) != 2)
+    if (my_array_len(command->args) != 2)
         return 84;
-    if (mysh->input[1][0] == '-')
+    if (command->args[0][0] == '-')
         return change_to_old_pwd(mysh);
-    if (chdir(mysh->input[1]) == 0) {
-        if (change_pwd(mysh) == 84)
-            return 84;
+    if (chdir(command->args[0]) == 0) {
+        change_pwd(mysh);
         return 0;
     }
     else
