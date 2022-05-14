@@ -6,13 +6,13 @@
 */
 
 #include "lib.h"
+#include "minif.h"
 #include "struct.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 
-static int special_case(char *input, command_t *command,
-                                                mysh_t *mysh, char *to_exe)
+static int special_case(char *input, command_t *command, char *to_exe)
 {
     if (input[0] == '/' && access(to_exe, F_OK) == 0) {
         command->path = to_exe;
@@ -30,13 +30,13 @@ static int special_case(char *input, command_t *command,
 
 void define_path(char *input, command_t *command, mysh_t *mysh)
 {
-    char **all_path = my_stwa(get_path(mysh->env), ':');
+    char **all_path = my_stwa(&get_in_env(mysh->env, "PATH")[5], ':');
     char *to_exe = my_stwa(input, ' ')[0];
 
-    if (special_case(input, command, mysh, to_exe) == 1)
+    if (special_case(input, command, to_exe) == 1)
         return;
     for (int i = 0; all_path[i]; ++i) {
-        to_exe = my_strcat(my_strcat(all_path[i], "/"), input[0]);
+        to_exe = my_strcat(my_strcat(all_path[i], "/"), to_exe);
         if (access(to_exe, F_OK) == 0) {
             command->path = to_exe;
             return;

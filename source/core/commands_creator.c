@@ -11,7 +11,7 @@
 
 char **my_stwa(char const *str, char div);
 
-void add_command_in_list(list_commands_t **commands_list, list_commands_t *command)
+void add_command_in_list(list_commands_t **commands_list, command_t *command)
 {
     list_commands_t *commands_node = malloc(sizeof(list_commands_t));
     commands_node->command = command;
@@ -23,15 +23,16 @@ void add_command_in_list(list_commands_t **commands_list, list_commands_t *comma
 list_commands_t *commands_creator(mysh_t *mysh, char **env)
 {
     list_commands_t *commands_list = NULL;
-    command_t *command = malloc(sizeof(command_t));
+    command_t *command = NULL;
     char **list = my_stwa(mysh->input, ';');
 
     if (!commands_list)
         return NULL;
-    command->env = env;
-    //TODO? is_a_builtin_command(command, mysh);
     for (int i = 0; list[i]; ++i) {
-        define_path(list[i], &command, mysh);
+        command = malloc(sizeof(command_t));
+        command->env = env;
+        define_path(list[i], command, mysh);
+        //TODO! is_a_builtin_command(command, mysh);
         // *pipe_handler(list[i], &command, mysh);
         // *redirect_left_handler(list[i], &command, mysh);
         // *dredirect_left_handler(list[i], &command, mysh);
