@@ -11,16 +11,6 @@
     #include "struct.h"
 
     ////////////////////////////////////////////////////////////
-    /// \brief Error handling
-    ///
-    /// \param argc number of argumets given with the binary
-    ///
-    /// \return Return 0 if OK | 84 if KO
-    ///
-    ////////////////////////////////////////////////////////////
-    int error_handling(int argc);
-
-    ////////////////////////////////////////////////////////////
     /// \brief Fork then execute command specified
     ///
     /// \param mysh Struct with all variables needed
