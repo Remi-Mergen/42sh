@@ -14,4 +14,5 @@ char *get_in_env(list_env_t *env, char *target)
         if (my_strncmp(tmp->data, target, my_strlen(target)) == 0)
             return tmp->data;
     }
+    return NULL;
 }
