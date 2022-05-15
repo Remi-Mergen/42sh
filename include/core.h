@@ -13,13 +13,23 @@
     ////////////////////////////////////////////////////////////
     /// \brief          Parse user-input to split command
     ///
-    /// \param mysh     main structure
+    /// \param mysh     Adresse of main structure
     ///
-    /// \param env      enviroment
+    /// \param env      Enviroment
     ///
-    /// \return         linked list of command
+    /// \return         Linked list of command
     ///
     ////////////////////////////////////////////////////////////
-    list_commands_t *commands_creator(mysh_t *mysh, char **env);
+    void commands_creator(mysh_t **mysh, char **env);
+
+    ////////////////////////////////////////////////////////////
+    /// \brief          Execute commands in commands_list
+    ///
+    /// \param mysh     Main structure with the commands list
+    ///
+    /// \return         status returned by the process
+    ///
+    ////////////////////////////////////////////////////////////
+    int exec_commands(mysh_t *mysh);
 
 #endif /* !CORE_H_ */

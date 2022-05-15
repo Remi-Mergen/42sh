@@ -13,13 +13,14 @@
 #include "define.h"
 #include "prototype.h"
 #include <stdbool.h>
+void display_prompt(int exit_code);
 
 static int parser_not_tty(mysh_t *mysh)
 {
     size_t size = 0;
-    printf("I'm not a tty\n");
 
     while(getline(&mysh->input, &size, stdin) != -1) {
+        display_prompt(mysh->last_return_value);
         size = size;
     }
     return 0;
@@ -28,15 +29,16 @@ static int parser_not_tty(mysh_t *mysh)
 static int parser_tty(mysh_t *mysh, char **env)
 {
     size_t size = 0;
-    printf("I'm a tty\n");
 
     while(true) {
+        display_prompt(mysh->last_return_value);
         if (getline(&mysh->input, &size, stdin) == -1)
             return 84;
+        mysh->input[my_strlen(mysh->input) - 1] = '\0';
         if (my_strlen(mysh->input) == 0 || mysh->input[0] == '\n')
             continue;
-        mysh->commands_list = commands_creator(mysh, env);
-        execve(mysh->commands_list->command->path, mysh->commands_list->command->args, mysh->commands_list->command->env);
+        commands_creator(&mysh, env);
+        exec_commands(mysh);
     }
 }
 
