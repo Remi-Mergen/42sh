@@ -10,25 +10,9 @@
 #include "struct.h"
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdio.h> //TODO remove
 
-static void change_pwd(mysh_t *mysh)
-{
-    char *new_pwd = my_strcat("PWD=", getcwd(NULL, 0));
-    char *old_pwd = NULL;
-
-    for (list_env_t *tmp = mysh->env; tmp; tmp = tmp->next) {
-        if (my_strncmp(tmp->data, "PWD", 3) == 0) {
-            old_pwd = tmp->data;
-            tmp->data = new_pwd;
-        }
-    }
-    for (list_env_t *tmp = mysh->env; tmp; tmp = tmp->next) {
-        if (my_strncmp(tmp->data, "OLDPWD", 6) == 0)
-            tmp->data = my_strcat("OLDPWD=", old_pwd);
-    }
-}
-
-int change_to_old_pwd(mysh_t *mysh)
+static int change_to_old_pwd(mysh_t *mysh)
 {
     char *old_pwd = my_stwa(get_in_env(mysh->env, "OLDPWD"), '=')[1];
 
@@ -47,16 +31,33 @@ int change_to_old_pwd(mysh_t *mysh)
     return 0;
 }
 
+static void change_pwd(mysh_t *mysh)
+{
+    char *new_pwd = my_strcat("PWD=", getcwd(NULL, 0));
+    char *old_pwd = NULL;
+
+    for (list_env_t *tmp = mysh->env; tmp; tmp = tmp->next) {
+        if (my_strncmp(tmp->data, "PWD", 3) == 0) {
+            old_pwd = tmp->data;
+            tmp->data = new_pwd;
+        }
+    }
+    for (list_env_t *tmp = mysh->env; tmp; tmp = tmp->next) {
+        if (my_strncmp(tmp->data, "OLDPWD", 6) == 0)
+            tmp->data = my_strcat("OLDPWD=", old_pwd);
+    }
+}
+
 int my_cd(mysh_t *mysh, UNUSED command_t *command)
 {
-    if (my_array_len(command->args) != 2)
-        return 84;
     if (command->args[0][0] == '-')
         return change_to_old_pwd(mysh);
-    if (chdir(command->args[0]) == 0) {
+    if (chdir(command->args[1]) == 0) {
         change_pwd(mysh);
         return 0;
     }
-    else
+    else {
+        write(2, "error\n", 6);
         return 84;
+    }
 }

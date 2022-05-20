@@ -21,7 +21,6 @@ static int parser_not_tty(mysh_t *mysh)
 
     while(getline(&mysh->input, &size, stdin) != -1) {
         display_prompt(mysh->last_return_value);
-        size = size;
     }
     return 0;
 }

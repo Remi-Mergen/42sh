@@ -9,6 +9,7 @@
     #define STRUCT_H_
 
     struct mysh_s;
+    struct command_s;
 
     ////////////////////////////////////////////////////////////
     /// \brief Store all env in a linked list
@@ -18,9 +19,9 @@
     /// \param next   ptr to next element in the linked list
     ///
     ////////////////////////////////////////////////////////////
-    typedef struct list_env {
+    typedef struct list_env_s {
         char *data;
-        struct list_env *next;
+        struct list_env_s *next;
     } list_env_t;
 
     ////////////////////////////////////////////////////////////
@@ -33,7 +34,7 @@
     ////////////////////////////////////////////////////////////
     typedef struct builtin_commands {
         char *command;
-        int (*fct_ptr)(struct mysh_s *);
+        int (*fct_ptr)(struct mysh_s *, struct command_s *);
     } builtin_commands_t;
 
     ////////////////////////////////////////////////////////////
@@ -53,15 +54,15 @@
     /// \param heredoc          keyword to stop `<<` command
     ///
     ////////////////////////////////////////////////////////////
-    typedef struct command {
+    typedef struct command_s {
         char **env;
         builtin_commands_t *builtin;
         char *path;
         char *output;
         char **args;
         int return_value;
-        struct command *prev_pipe;
-        struct command *next_pipe;
+        struct command_s *prev_pipe;
+        struct command_s *next_pipe;
         int redirect_stdout;
         int redirect_stdin;
         int eof;

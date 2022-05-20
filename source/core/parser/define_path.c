@@ -31,6 +31,8 @@ static int special_case(char *input, command_t *command, char *to_exe)
 
 void define_path(char *input, command_t *command, mysh_t *mysh)
 {
+    if (command->builtin != NULL)
+        return;
     char **all_path = my_stwa(&get_in_env(mysh->env, "PATH")[5], ':');
     char *to_exe = my_stwa(input, ' ')[0];
     char *tmp = NULL;
