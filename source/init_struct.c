@@ -13,6 +13,7 @@ int my_cd(mysh_t *mysh, UNUSED command_t *command);
 int my_env(mysh_t *mysh, UNUSED command_t *command);
 int my_setenv(mysh_t *mysh, UNUSED command_t *command);
 int my_unsetenv(mysh_t *mysh, UNUSED command_t *command);
+int my_exit(UNUSED mysh_t *mysh, UNUSED command_t *command);
 
 static void init_builtin_commands(mysh_t *mysh)
 {
@@ -24,6 +25,9 @@ static void init_builtin_commands(mysh_t *mysh)
     mysh->builtin_commands[2].fct_ptr = &my_setenv;
     mysh->builtin_commands[3].command = "unsetenv";
     mysh->builtin_commands[3].fct_ptr = &my_unsetenv;
+    mysh->builtin_commands[4].command = "exit";
+    mysh->builtin_commands[4].fct_ptr = &my_exit;
+
 }
 
 static list_env_t *init_env(char **env)
