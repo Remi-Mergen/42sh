@@ -19,12 +19,22 @@ static void fill_args(char *input, command_t *command, UNUSED mysh_t *mysh)
     command->args = my_stwa(input, ' ');
 }
 
-void add_command_in_list(list_commands_t **commands_list, command_t *command)
+void add_command_in_end_of_list(list_commands_t **commands_list,
+                                                        command_t *command)
 {
-    list_commands_t *commands_node = malloc(sizeof(list_commands_t));
-    commands_node->command = command;
-    commands_node->next = *commands_list;
-    *commands_list = commands_node;
+    if (*commands_list == NULL) {
+        *commands_list = malloc(sizeof(list_commands_t));
+        (*commands_list)->command = command;
+        (*commands_list)->next = NULL;
+    } else {
+        list_commands_t *tmp = *commands_list;
+
+        while (tmp->next != NULL)
+            tmp = tmp->next;
+        tmp->next = malloc(sizeof(list_commands_t));
+        tmp->next->command = command;
+        tmp->next->next = NULL;
+    }
     return;
 }
 
@@ -41,14 +51,14 @@ static void builtin_command_handler(UNUSED mysh_t *mysh,
     return;
 }
 
-/* static void pipe_handler(char *input, UNUSED command_t **command,
+static void pipe_handler(char *input, UNUSED command_t **command,
                         UNUSED mysh_t *mysh, char **env)
 {
     char **splited = my_stwa(input, '|');
     if (my_array_len(splited) == 1)
         return;
     command_t *pipe_command = malloc(sizeof(command_t));
-    command_t *tmp = NULL;
+    command_t *tmp = malloc(sizeof(command_t));
     pipe_command->prev_pipe = *command;
     for (unsigned int i = 1; splited[i]; ++i) {
         tmp->env = env;
@@ -59,7 +69,7 @@ static void builtin_command_handler(UNUSED mysh_t *mysh,
         tmp->prev_pipe = pipe_command;
     }
     // ?free(tmp);
-} */
+}
 
 static void get_command(mysh_t **mysh, command_t **command,
                                             char *input, UNUSED char **env)
@@ -69,7 +79,7 @@ static void get_command(mysh_t **mysh, command_t **command,
     fill_args(input, *command, (*mysh));
     builtin_command_handler((*mysh), *command, builtin);
     define_path(input, *command, (*mysh));
-    // pipe_handler(input, command, (*mysh), env);
+    pipe_handler(input, command, (*mysh), env);
     //* redirect_left_handler(input, command, mysh);
     //! dredirect_left_handler(input, command, mysh);
     //* redirect_right_handler(input, command, mysh);
@@ -86,7 +96,7 @@ void commands_creator(mysh_t **mysh, char **env)
         command = malloc(sizeof(command_t));
         command->env = env;
         get_command(mysh, &command, list[i], env);
-        add_command_in_list(&commands_list, command);
+        add_command_in_end_of_list(&commands_list, command);
     }
     (*mysh)->commands_list = commands_list;
     return;
