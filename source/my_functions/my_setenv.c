@@ -5,48 +5,48 @@
 ** my_setenv
 */
 
-#include "minif.h"
-#include "struct.h"
 #include "lib.h"
+#include "minif.h"
+#include "define.h"
+#include "struct.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-static void already_here(mysh_t *mysh, int index, char *str)
+static int already_here(mysh_t *mysh, command_t *command, char *new_var)
 {
-    mysh->env[index] = malloc(sizeof(char) * my_strlen(str));
-    mysh->env[index] = str;
-    if (my_strcmp(mysh->input[1], "PATH") == 0)
-        mysh->path_alt = str;
-}
-
-static char **add_new_var_in_env(int len, mysh_t *mysh, char *str)
-{
-    char **new_env = malloc(sizeof(char *) * len);
-
-    for (int i = 0; mysh->env[i]; ++i) {
-        new_env[i] = malloc(sizeof(char) * my_strlen(mysh->env[i]));
-        new_env[i] = mysh->env[i];
+    for (list_env_t *tmp = mysh->env; tmp; tmp = tmp->next) {
+        if (my_strncmp(tmp->data, command->args[0], my_strlen(command->args[0])) == 0) {
+            tmp->data = new_var;
+            return 1;
+        }
     }
-    new_env[len - 1] = malloc(sizeof(char) * my_strlen(str));
-    new_env[len - 1] = str;
-    new_env[len] = NULL;
-    return new_env;
+    return 0;
 }
 
-int my_setenv(mysh_t *mysh)
+static void add_var_in_env(mysh_t *mysh, char *new_var)
 {
-    int index = find_in_env(mysh->env, mysh->input[1]);
-    char *str = my_strcat(my_strcat(my_strcat(mysh->input[1], "="),
-                                                    mysh->input[2]), "\0");
+    list_env_t *new_env = malloc(sizeof(list_env_t));
 
-    if (my_array_len(mysh->input) > 3) {
+    if (!new_env) {
+        write(2, "Could not allocate memory\n", 26);
+        return;
+    }
+    new_env->data = new_var;
+    new_env->next = mysh->env;
+    mysh->env = new_env;
+}
+
+int my_setenv(mysh_t *mysh, UNUSED command_t *command)
+{
+    char *new_var = my_strcat(my_strcat(my_strcat(command->args[0], "="),
+                                                    command->args[1]), "\0");
+
+    if (my_array_len(command->args) > 3) {
         minif("setenv: Too many arguments.");
         return 1;
     }
-    if (index != -1) {
-        already_here(mysh, index, str);
+    if (already_here(mysh, command, new_var) == 1)
         return 0;
-    }
-    mysh->env = add_new_var_in_env(my_array_len(mysh->env) + 1, mysh, str);
+    add_var_in_env(mysh, new_var);
     return 0;
 }

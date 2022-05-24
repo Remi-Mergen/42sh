@@ -8,19 +8,102 @@
 #ifndef STRUCT_H_
     #define STRUCT_H_
 
+    struct mysh_s;
+    struct command_s;
+
     ////////////////////////////////////////////////////////////
-    /// \brief Linked_list to stock input and env
+    /// \brief Store all env in a linked list
     ///
-    /// \param input   char ** to stock input
+    /// \param data   char * to store a line of env
     ///
-    /// \param env   char ** to stock env
-    ///
-    /// \param path_alt   char * to stock PATH if it is unset
+    /// \param next   ptr to next element in the linked list
     ///
     ////////////////////////////////////////////////////////////
-    typedef struct {
-        char **input;
+    typedef struct list_env_s {
+        char *data;
+        struct list_env_s *next;
+    } list_env_t;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief linked list to store my builtin commands
+    ///
+    /// \param command   char * to store the name of the command
+    ///
+    /// \param fct_ptr   ptr to command function
+    ///
+    ////////////////////////////////////////////////////////////
+    typedef struct builtin_commands {
+        char *command;
+        int (*fct_ptr)(struct mysh_s *, struct command_s *);
+    } builtin_commands_t;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Store all env in a linked list
+    ///
+    /// \param env              char ** to store env for execve
+    /// \param builtin          NULL if command is not a builtin
+    /// \param path             NULL if builtin command, else path to execve
+    /// \param output           output of the command
+    /// \param args             arguments of the command (1st is always the path)
+    /// \param return_value     value returned by the command
+    /// \param prev_pipe        ptr to the previous command if pipe exist
+    /// \param next_pipe        ptr to the next command if pipe exist
+    /// \param redirect_stdout  fd to redirect output
+    /// \param redirect_stdin   fd to redirect input
+    /// \param eof              Should we write at the end of the file?
+    /// \param heredoc          keyword to stop `<<` command
+    ///
+    ////////////////////////////////////////////////////////////
+    typedef struct command_s {
         char **env;
-        char *path_alt;
+        builtin_commands_t *builtin;
+        char *path;
+        char *output;
+        char **args;
+        int return_value;
+        struct command_s *prev_pipe;
+        struct command_s *next_pipe;
+        int redirect_stdout;
+        int redirect_stdin;
+        int eof;
+        char *heredoc;
+    } command_t;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Store the lost of the command in the user input
+    ///
+    /// \param data   char * to store a line of env
+    ///
+    /// \param next   ptr to next element in the linked list
+    ///
+    ////////////////////////////////////////////////////////////
+    typedef struct list_commands {
+        command_t *command;
+        struct list_commands *next;
+    } list_commands_t;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Store everything
+    ///
+    /// \param commands_list        Linked list of commands asked in the input
+    /// \param builtin_commands     Linked list of builtin commands
+    /// \param env                  Linekd list of env
+    /// \param last_return_value    Store the last return value
+    /// \param input                Char * to store the user input
+    /// \param error                Error handling in loop
+    /// \param is_tty               Is it a terminal
+    /// \param exit                 Store return value and used for error handling
+    ///
+    ////////////////////////////////////////////////////////////
+    typedef struct mysh_s {
+        list_commands_t *commands_list;
+        builtin_commands_t builtin_commands[5];
+        list_env_t *env;
+        int last_return_value;
+        char *input;
+        int error;
+        int is_tty;
+        int exit;
     } mysh_t;
+
 #endif /* !STRUCT_H_ */

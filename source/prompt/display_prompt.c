@@ -6,9 +6,10 @@
 */
 
 #include "minif.h"
+#include <stdio.h>
 
 void display_prompt(int exit_code)
 {
-    //minif("\n[%s]\n", getcwd(NULL, 0));
+    minif("\n[%s]\n", getcwd(NULL, 0));
     minif("%d $>", exit_code);
 }
