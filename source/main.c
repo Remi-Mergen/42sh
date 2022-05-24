@@ -37,7 +37,7 @@ static int parser_tty(mysh_t *mysh, char **env)
         if (my_strlen(mysh->input) == 0 || mysh->input[0] == '\n')
             continue;
         commands_creator(&mysh, env);
-        exec_commands(mysh);
+        exec_commands(mysh);*
     }
 }
 

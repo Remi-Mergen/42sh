@@ -10,7 +10,6 @@
 #include "struct.h"
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h> //TODO remove
 
 static int change_to_old_pwd(mysh_t *mysh)
 {
