@@ -30,30 +30,26 @@ void exec_builtin(mysh_t *mysh, command_t *command)
 
 static void pipe_execution(mysh_t *mysh, command_t *command)
 {
-    int fd[2];
+    int fd[2]; //[lecture][écriture]      [][STDOUT]
+    // char *output = malloc(sizeof(char) * 10000);
     int pid = 0x0;
 
     pipe(fd);
     pid = fork();
     if (pid == 0) {
-        dup2(fd[1], 1);
+        dup2(fd[1], STDOUT_FILENO);
         close(fd[0]);
+        close(fd[1]);
         execve(command->path, command->args, command->env);
         exit(0);
     } else {
+        mysh->last_return_value = my_wait(&pid);
         close(fd[1]);
         dup2(fd[0], 0);
-        mysh->last_return_value = my_wait(&pid);
+        execve(command->next_pipe->path, command->next_pipe->args, command->next_pipe->env);
     }
+    // print_array(command->next_pipe->args);
 }
-/*
-for (command_t *tmp_pipe = tmp->command; tmp_pipe; tmp_pipe = tmp_pipe->next_pipe) {
-    if (tmp_pipe->builtin == NULL) {
-        not_builtin(mysh, tmp_pipe);
-    } else {
-        exec_builtin(mysh, tmp_pipe);
-    }
-}*/
 
 int exec_commands(mysh_t *mysh)
 {

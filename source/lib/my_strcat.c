@@ -14,11 +14,11 @@ char *my_strcat(char *src1, char *src2)
         return src2;
     if (src2 == NULL)
         return src1;
-    int src1_len = my_strlen(src1);
-    int src2_len = my_strlen(src2);
+    unsigned int src1_len = my_strlen(src1);
+    unsigned int src2_len = my_strlen(src2);
     char *dest = malloc(sizeof(char) * (src1_len + src2_len + 1));
 
-    for (int i = 0; i < src1_len + src2_len; ++i) {
+    for (unsigned int i = 0; i < src1_len + src2_len; ++i) {
         if (i < src1_len)
             dest[i] = src1[i];
         else

@@ -88,6 +88,16 @@
     int my_strcmp(const char *s1, const char *s2);
 
     ////////////////////////////////////////////////////////////
+    /// \brief      Get a copy of a string
+    ///
+    /// \param src  The string to get the copy
+    ///
+    /// \return     Return the copy of the source
+    ///
+    ////////////////////////////////////////////////////////////
+    char *my_strcpy(const char *src);
+
+    ////////////////////////////////////////////////////////////
     /// \brief      Give the length of a string
     ///
     /// \param s    The string to get the length
