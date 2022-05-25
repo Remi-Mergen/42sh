@@ -39,7 +39,7 @@ void define_path(char *input, command_t *command, mysh_t *mysh)
 
     if (special_case(input, command, to_exe) == 1)
         return;
-    for (int i = 0; all_path[i]; ++i) {
+    for (unsigned int i = 0; all_path[i]; ++i) {
         tmp = my_strcat(my_strcat(all_path[i], "/"), to_exe);
         if (access(tmp, F_OK) == 0) {
             command->path = tmp;

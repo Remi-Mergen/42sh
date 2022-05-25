@@ -39,7 +39,7 @@ int my_unsetenv(mysh_t *mysh, command_t *command)
         minif("unsetenv: Too few arguments.\n");
         return 1;
     }
-    for (int i = 0; command->args[i]; i++) {
+    for (unsigned int i = 0; command->args[i]; i++) {
         remove_in_env(mysh, command, i);
     }
     return 0;

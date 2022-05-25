@@ -11,9 +11,9 @@ char *get_first_word(char *line, char separator)
 {
     char *str = malloc(sizeof(char) * 100);
 
-    for (int i = 0; i < 100; i++)
+    for (unsigned int i = 0; i < 100; i++)
         str[i] = '\0';
-    for (int i = 0; line[i] != separator; ++i)
+    for (unsigned int i = 0; line[i] != separator; ++i)
         str[i] = line[i];
     return str;
 }

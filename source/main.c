@@ -15,12 +15,16 @@
 #include <stdbool.h>
 void display_prompt(int exit_code);
 
-static int parser_not_tty(mysh_t *mysh)
+static int parser_not_tty(mysh_t *mysh, char **env)
 {
     size_t size = 0;
 
     while(getline(&mysh->input, &size, stdin) != -1) {
-        display_prompt(mysh->last_return_value);
+        mysh->input[my_strlen(mysh->input) - 1] = '\0';
+        if (my_strlen(mysh->input) == 0 || mysh->input[0] == '\n')
+            continue;
+        commands_creator(&mysh, env);
+        exec_commands(mysh);
     }
     return 0;
 }
@@ -57,7 +61,7 @@ int main(int argc, UNUSED char **argv, char **env)
     if (error_handling(argc) != 0)
         return 84;
     if (isatty(0) == 0) {
-        return parser_not_tty(mysh);
+        return parser_not_tty(mysh, env);
     }
     return parser_tty(mysh, env);
 }
