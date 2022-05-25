@@ -14,7 +14,10 @@ void close_dup(int *tube, int fd);
 
 void execution_command(mysh_t *mysh, command_t *command)
 {
-    //TODO builtin gestion
+    if (command->builtin != NULL) {
+        command->builtin->fct_ptr(mysh, command);
+        return;
+    }
     int pid = fork();
     if (pid == 0) {
         execve(command->path, command->args, command->env);
@@ -23,28 +26,11 @@ void execution_command(mysh_t *mysh, command_t *command)
     }
 }
 
-/* void pip_execution(mysh_t *mysh, command_t *command)
-{
-    int tube[2];
-    pipe(tube);
-    close_dup(tube, STDOUT_FILENO);
-    execution_command(mysh, command);
-    close_dup(tube, STDIN_FILENO);
-
-    int tube2[2];
-    pipe(tube2);
-    close_dup(tube2, STDOUT_FILENO);
-    execution_command(mysh, command->next_pipe);
-    close_dup(tube2, STDIN_FILENO);
-
-
-} */
-
 unsigned int count_pipe(command_t *command)
 {
     unsigned int count = 0;
-    for (; command != NULL; command = command->next_pipe, ++count);
-    return count;
+    for (command_t *tmp = command; tmp != NULL; tmp = tmp->next_pipe, ++count);
+    return count - 1;
 }
 
 void hello_pipe(mysh_t *mysh, command_t *command)
@@ -53,14 +39,15 @@ void hello_pipe(mysh_t *mysh, command_t *command)
     unsigned int pipe_count = count_pipe(command);
     int tube[pipe_count][2];
 
-    for (unsigned int i = 0; i < pipe_count - 1;
+    for (unsigned int i = 0; i < pipe_count;
                                         i++, command = command->next_pipe) {
-        pipe(tube[i]) != -1 ? 0 : perror("pipe");
+        if (pipe(tube[i]) == -1)
+            perror("pipe");
         close_dup(tube[i], STDOUT_FILENO);
-        execution_command(mysh, command);
+        execution_command(mysh, &(*command));
         close_dup(tube[i], STDIN_FILENO);
     }
     close_dup(std, 1);
-    execution_command(mysh, command->next_pipe);
+    execution_command(mysh, command);
     close_dup(std, 0);
 }
