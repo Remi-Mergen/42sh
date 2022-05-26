@@ -137,3 +137,15 @@ TESTS=
   echo 'ls -l'
   echo 'exit 45|cat /etc/resolv.conf'
 [912-END]
+
+[913]
+NAME="Hard"
+SETUP="export PATH=$PWD"
+CLEAN=""
+TESTS=
+  echo "/bin/cat /bin/cat > mycat"
+  echo "/bin/chmod 755 mycat"
+  echo "mycat /home/retr0/file > /tmp/fic"
+  echo "/bin/wc -c /tmp/fic"
+  echo "/bin/diff -N /home/retr0/file /tmp/fic"
+[913-END]
