@@ -63,7 +63,6 @@ static void pipe_handler(char *input, UNUSED command_t **command,
         tmp = malloc(sizeof(command_t));
         tmp->prev_pipe = pipe_command;
     }
-    // ?free(tmp);
 }
 
 static void get_command(mysh_t **mysh, command_t **command,
@@ -75,7 +74,6 @@ static void get_command(mysh_t **mysh, command_t **command,
     builtin_command_handler((*mysh), *command, builtin);
     define_path(my_strcpy(input), *command, (*mysh));
     redirect_left_handler(input, command);
-    //! dredirect_left_handler(input, command, mysh);
     redirect_and_double_right_handler(input, command);
     return;
 }

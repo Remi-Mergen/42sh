@@ -13,8 +13,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-//  && S_ISDIR(st.st_mode)
-
 static void error_handling(command_t *command)
 {
     struct stat st;

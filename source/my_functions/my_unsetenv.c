@@ -23,8 +23,6 @@ static void remove_in_env(mysh_t *mysh, command_t *command, int i)
         if (my_strncmp(tmp->data, command->args[i],
                                         my_strlen(command->args[i])) == 0) {
             prev->next = tmp->next;
-            // free(tmp->data);
-            // free(tmp);
             return;
         }
     }
