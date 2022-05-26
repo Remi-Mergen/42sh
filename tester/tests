@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 [899]
 NAME="testing ls"
 SETUP="PATH=''"
@@ -15,8 +14,6 @@ TESTS=
   echo 'pwd'
 [900-END]
 
-=======
->>>>>>> 5f17ff330eb794dc3c18f945deb7bece3147d9f3
 [901]
 NAME="Nothing"
 SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
@@ -56,13 +53,7 @@ SETUP="export TERM=xterm ; PATH='/bin:/usr/bin'"
 CLEAN=""
 TESTS=
   echo 'cat /etc/resolv.conf'
-<<<<<<< HEAD
   echo 'ls -l /etc'
-=======
-  sleep 0.5
-  echo 'ls -l /etc'
-  sleep 0.5
->>>>>>> 5f17ff330eb794dc3c18f945deb7bece3147d9f3
   echo 'pwd'
 [905-END]
 

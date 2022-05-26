@@ -6,6 +6,7 @@
 */
 
 #include "lib.h"
+#include "my_cmd.h"
 #include "minif.h"
 #include "define.h"
 #include "struct.h"
@@ -38,14 +39,17 @@ static void add_var_in_env(mysh_t *mysh, char *new_var)
 
 int my_setenv(mysh_t *mysh, UNUSED command_t *command)
 {
-    char *new_var = my_strcat(my_strcat(my_strcat(command->args[0], "="),
-                                                    command->args[1]), "\0");
+    char *new_var = my_strcat(my_strcat(my_strcat(command->args[1], "="),
+                                                    command->args[2]), "\0");
 
     if (my_array_len(command->args) > 3) {
         minif("setenv: Too many arguments.");
         return 1;
+    } else if (my_array_len(command->args) == 1) {
+        my_env(mysh, command);
+        return 0;
     }
-    if (already_here(mysh, command, new_var) == 1)
+    if (already_here(mysh, command, my_strcpy(new_var)) == 1)
         return 0;
     add_var_in_env(mysh, new_var);
     return 0;

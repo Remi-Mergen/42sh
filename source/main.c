@@ -14,19 +14,22 @@
 #include "prototype.h"
 #include <stdbool.h>
 void display_prompt(int exit_code);
+char *clear_str(char *str);
 
 static int parser_not_tty(mysh_t *mysh, char **env)
 {
     size_t size = 0;
+    int exit_code = 0;
 
     while(getline(&mysh->input, &size, stdin) != -1) {
         mysh->input[my_strlen(mysh->input) - 1] = '\0';
+        mysh->input = clear_str(mysh->input);
         if (my_strlen(mysh->input) == 0 || mysh->input[0] == '\n')
             continue;
         commands_creator(&mysh, env);
-        exec_commands(mysh);
+        exit_code = exec_commands(mysh);
     }
-    return 0;
+    return exit_code;
 }
 
 static int parser_tty(mysh_t *mysh, char **env)
@@ -38,6 +41,7 @@ static int parser_tty(mysh_t *mysh, char **env)
         if (getline(&mysh->input, &size, stdin) == -1)
             return 84;
         mysh->input[my_strlen(mysh->input) - 1] = '\0';
+        mysh->input = clear_str(mysh->input);
         if (my_strlen(mysh->input) == 0 || mysh->input[0] == '\n')
             continue;
         commands_creator(&mysh, env);

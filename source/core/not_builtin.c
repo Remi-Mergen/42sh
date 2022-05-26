@@ -6,27 +6,21 @@
 */
 
 #include "lib.h"
+#include "minif.h"
 #include "struct.h"
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h> //TODO to remove
-void close_dup(int *tube, int fd);
+#include <stdio.h>
+void execution_command(mysh_t *mysh, command_t *command);
 
-void execution_command(mysh_t *mysh, command_t *command)
+static void close_dup(int *tube, int fd)
 {
-    if (command->builtin != NULL) {
-        command->builtin->fct_ptr(mysh, command);
-        return;
-    }
-    int pid = fork();
-    if (pid == 0) {
-        execve(command->path, command->args, command->env);
-    } else {
-        mysh->last_return_value = my_wait(&pid);
-    }
+    close(fd);
+    dup2(tube[fd], fd);
+    close(tube[fd]);
 }
 
-unsigned int count_pipe(command_t *command)
+static unsigned int count_pipe(command_t *command)
 {
     unsigned int count = 0;
     for (command_t *tmp = command; tmp != NULL; tmp = tmp->next_pipe, ++count);

@@ -6,27 +6,38 @@
 */
 
 #include "lib.h"
+#include "minif.h"
 #include "struct.h"
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h> //TODO to remove
 void exec_builtin(mysh_t *mysh, command_t *command);
 void hello_pipe(mysh_t *mysh, command_t *command);
-void execution_command(mysh_t *mysh, command_t *command);
 
-void close_dup(int *tube, int fd)
+void execution_command(mysh_t *mysh, command_t *command)
 {
-    close(fd);
-    dup2(tube[fd], fd);
-    close(tube[fd]);
+    int pid = 1;
+    if (command->builtin != NULL) {
+        command->builtin->fct_ptr(mysh, command);
+        return;
+    } else if (command->return_value == -1) {
+        minif("%s: Command not found.\n", command->path);
+        mysh->last_return_value = 1;
+        return;
+    }
+    pid = fork();
+    if (pid == 0) {
+        execve(command->path, command->args, command->env);
+    } else {
+        mysh->last_return_value = my_wait(&pid);
+    }
 }
 
-void no_pipe(mysh_t *mysh, command_t *command)
+static void no_pipe(mysh_t *mysh, command_t *command)
 {
     execution_command(mysh, command);
 }
 
-void is_there_a_pipe(mysh_t *mysh, command_t *command)
+static void is_there_a_pipe(mysh_t *mysh, command_t *command)
 {
     if (command->next_pipe != NULL) {
         hello_pipe(mysh, command);
@@ -44,5 +55,7 @@ int exec_commands(mysh_t *mysh)
             is_there_a_pipe(mysh, tmp->command);
         }
     }
+    if(mysh->exit != -1 && mysh->last_return_value == 0)
+        exit(mysh->exit);
     return mysh->last_return_value;
 }
