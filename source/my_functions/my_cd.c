@@ -10,6 +10,25 @@
 #include "struct.h"
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+//  && S_ISDIR(st.st_mode)
+
+static void error_handling(command_t *command)
+{
+    struct stat st;
+
+    stat(command->path, &st);
+
+    if (access(command->path, F_OK)) {
+        my_puterr(command->args[1]);
+        my_puterr(": Not a directory.\n");
+    } else {
+        my_puterr(command->args[1]);
+        my_puterr(": No such file or directory.\n");
+    }
+}
 
 static int change_to_old_pwd(mysh_t *mysh)
 {
@@ -56,7 +75,7 @@ int my_cd(mysh_t *mysh, UNUSED command_t *command)
         return 0;
     }
     else {
-        write(2, "error\n", 6);
+        error_handling(command);
         return 84;
     }
 }
