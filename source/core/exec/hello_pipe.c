@@ -11,6 +11,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+void redirect_stdin(command_t *command);
+void redirect_stdout(command_t *command);
 void execution_command(mysh_t *mysh, command_t *command);
 
 void close_dup(int *tube, int fd)
@@ -38,6 +40,7 @@ void hello_pipe(mysh_t *mysh, command_t *command)
         if (pipe(tube[i]) == -1)
             perror("pipe");
         close_dup(tube[i], STDOUT_FILENO);
+        redirect_stdin(command);
         execution_command(mysh, &(*command));
         close_dup(tube[i], STDIN_FILENO);
     }

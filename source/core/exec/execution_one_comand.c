@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2022
 ** 42sh
 ** File description:
-** execution_comand
+** execution_one_comand
 */
 
 #include "lib.h"
