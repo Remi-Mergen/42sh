@@ -9,9 +9,11 @@
 #include "define.h"
 #include "struct.h"
 #include <stdlib.h>
+#include <stdio.h> //TODO remove
 
 int my_exit(UNUSED mysh_t *mysh, UNUSED command_t *command)
 {
+    printf("exit: %d\n", my_atoi(command->args[1]));
     if (command->next_pipe != NULL) {
         mysh->exit = my_atoi(command->args[1]);
         return 0;
