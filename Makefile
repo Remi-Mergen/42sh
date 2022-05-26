@@ -17,7 +17,8 @@ OBJECTS         :=      $(addprefix $(BUILD_DIR), $(SRC:$(SRC_DIR)%.c=%.o))
 
 BINARY          :=      mysh
 
-CFLAGS          :=      -Wall -Wextra -Wpedantic -Werror -g
+CFLAGS          :=      -Wall -Wextra -Wpedantic -Werror\
+						-D_FILE_OFFSET_BITS=64 -g
 
 all: $(BINARY)
 

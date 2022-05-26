@@ -49,6 +49,6 @@ void hello_pipe(mysh_t *mysh, command_t *command)
     else
         close_dup(std, 1);
     execution_command(mysh, command);
-    close_dup(std, 0);
-    close_dup(std, 1);
+    close_dup(std, STDIN_FILENO);
+    close_dup(std, STDOUT_FILENO);
 }
