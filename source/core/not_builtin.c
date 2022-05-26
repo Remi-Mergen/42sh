@@ -13,7 +13,7 @@
 #include <stdio.h>
 void execution_command(mysh_t *mysh, command_t *command);
 
-static void close_dup(int *tube, int fd)
+void close_dup(int *tube, int fd)
 {
     close(fd);
     dup2(tube[fd], fd);
@@ -41,7 +41,11 @@ void hello_pipe(mysh_t *mysh, command_t *command)
         execution_command(mysh, &(*command));
         close_dup(tube[i], STDIN_FILENO);
     }
-    close_dup(std, 1);
+    if (command->redirect_stdout != 1)
+        dup2(command->redirect_stdout, 1);
+    else
+        close_dup(std, 1);
     execution_command(mysh, command);
     close_dup(std, 0);
+    close_dup(std, 1);
 }
