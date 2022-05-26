@@ -10,31 +10,22 @@
 #include "struct.h"
 #include <unistd.h>
 #include <stdlib.h>
-void exec_builtin(mysh_t *mysh, command_t *command);
+void close_dup(int *tube, int fd);
+void redirect_stdin(command_t *command);
+void redirect_stdout(command_t *command);
 void hello_pipe(mysh_t *mysh, command_t *command);
-
-void execution_command(mysh_t *mysh, command_t *command)
-{
-    int pid = 1;
-    if (command->builtin != NULL) {
-        command->builtin->fct_ptr(mysh, command);
-        return;
-    } else if (command->return_value == -1) {
-        minif("%s: Command not found.\n", command->path);
-        mysh->last_return_value = 1;
-        return;
-    }
-    pid = fork();
-    if (pid == 0) {
-        execve(command->path, command->args, command->env);
-    } else {
-        mysh->last_return_value = my_wait(&pid);
-    }
-}
+void exec_builtin(mysh_t *mysh, command_t *command);
+void execution_command(mysh_t *mysh, command_t *command);
 
 static void no_pipe(mysh_t *mysh, command_t *command)
 {
+    int std[2] = {dup(STDIN_FILENO), dup(STDOUT_FILENO)};
+
+    redirect_stdin(command);
+    redirect_stdout(command);
     execution_command(mysh, command);
+    close_dup(std, 0);
+    close_dup(std, 1);
 }
 
 static void is_there_a_pipe(mysh_t *mysh, command_t *command)

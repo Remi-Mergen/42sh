@@ -44,6 +44,16 @@
     char *get_input(void);
 
     ////////////////////////////////////////////////////////////
+    /// \brief      Initialise a command struct malloced
+    ///
+    /// \param env  The env
+    ///
+    /// \return     Return the user input in a char *
+    ///
+    ////////////////////////////////////////////////////////////
+    void init_command(command_t **command, char **env);
+
+    ////////////////////////////////////////////////////////////
     /// \brief          Get the length of an array
     ///
     /// \param array    The string to get the length
