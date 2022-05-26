@@ -43,7 +43,7 @@ int my_setenv(mysh_t *mysh, UNUSED command_t *command)
                                                     command->args[2]), "\0");
 
     if (my_array_len(command->args) > 3) {
-        minif("setenv: Too many arguments.");
+        write(2, "setenv: Too many arguments.\n", 28);
         return 1;
     } else if (my_array_len(command->args) == 1) {
         my_env(mysh, command);

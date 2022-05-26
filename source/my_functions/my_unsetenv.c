@@ -35,11 +35,11 @@ int my_unsetenv(mysh_t *mysh, command_t *command)
     if (command->args == NULL) {
         my_env(mysh, command);
         return 0;
-    } else if (my_array_len(command->args) == 0) {
-        minif("unsetenv: Too few arguments.\n");
+    } else if (my_array_len(command->args) == 1) {
+        write(2, "unsetenv: Too few arguments.\n", 29);
         return 1;
     }
-    for (unsigned int i = 0; command->args[i]; i++) {
+    for (unsigned int i = 1; command->args[i]; i++) {
         remove_in_env(mysh, command, i);
     }
     return 0;
