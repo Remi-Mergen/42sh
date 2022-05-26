@@ -42,6 +42,6 @@
     /// \return Return the struct initialized successfully
     ///
     ////////////////////////////////////////////////////////////
-    void define_path(char *input, command_t *command, mysh_t *mysh);
+    int define_path(char *input, command_t *command, mysh_t *mysh);
 
 #endif /* !PROTOTYPE_H_ */

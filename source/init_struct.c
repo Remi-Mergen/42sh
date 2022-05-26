@@ -56,6 +56,6 @@ mysh_t *init_struct(char **env)
     mysh->input = NULL;
     mysh->error = 0;
     mysh->is_tty = 0;
-    mysh->exit = 0;
+    mysh->exit = -1;
     return mysh;
 }

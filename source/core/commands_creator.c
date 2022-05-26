@@ -10,7 +10,6 @@
 #include "define.h"
 #include "stdlib.h"
 #include "prototype.h"
-#include <stdio.h>//TODO remove
 static void get_command(mysh_t **mysh, command_t **command,
                                             char *input, UNUSED char **env);
 
@@ -50,7 +49,7 @@ void add_command_in_end_of_list(list_commands_t **commands_list,
 static void builtin_command_handler(UNUSED mysh_t *mysh,
                                         command_t *command, char **builtin)
 {
-    if (command->args == NULL)
+    if (command->args == NULL || command->args[0] == NULL)
         return;
     for (unsigned int i = 0; i < my_array_len(builtin); i++) {
         if (my_strcmp(builtin[i], command->args[0]) == 0) {
@@ -96,6 +95,7 @@ static void get_command(mysh_t **mysh, command_t **command,
     //! dredirect_left_handler(input, command, mysh);
     //* redirect_right_handler(input, command, mysh);
     //* dredirect_right_handler(input, command, mysh);
+    return;
 }
 
 void commands_creator(mysh_t **mysh, char **env)
@@ -107,6 +107,7 @@ void commands_creator(mysh_t **mysh, char **env)
     for (unsigned int i = 0; list[i]; ++i) {
         command = malloc(sizeof(command_t));
         command->env = env;
+        command->builtin = NULL;
         command->redirect_stdout = 1;
         command->redirect_stdin = 0;
         command->eof = 0;

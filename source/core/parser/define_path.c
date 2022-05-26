@@ -11,11 +11,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <stdio.h>//TODO remove
 
-static int special_case(char *input, command_t *command, char *to_exe)
+static int special_case(command_t *command, char *to_exe)
 {
-    if (input[0] == '/' && access(to_exe, F_OK) == 0) {
+    if (to_exe[0] == '/' && access(to_exe, F_OK) == 0) {
         command->path = to_exe;
         return 1;
     }
@@ -37,7 +36,7 @@ void define_path(char *input, command_t *command, mysh_t *mysh)
     char *to_exe = my_stwa(input, ' ')[0];
     char *tmp = NULL;
 
-    if (special_case(input, command, to_exe) == 1)
+    if (special_case(command, to_exe) == 1)
         return;
     for (unsigned int i = 0; all_path[i]; ++i) {
         tmp = my_strcat(my_strcat(all_path[i], "/"), to_exe);
@@ -46,6 +45,7 @@ void define_path(char *input, command_t *command, mysh_t *mysh)
             return;
         }
     }
-    minif("%s: Command not found.\n", input);
+    command->path = to_exe;
+    command->return_value = -1;
     return;
 }

@@ -7,7 +7,6 @@
 
 #include "lib.h"
 #include "struct.h"
-#include <stdio.h>//TODO remove
 
 char *get_in_env(list_env_t *env, char *target)
 {

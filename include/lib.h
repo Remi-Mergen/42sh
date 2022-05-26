@@ -54,6 +54,16 @@
     unsigned int my_array_len(char **array);
 
     ////////////////////////////////////////////////////////////
+    /// \brief          Cast a string into a unsigned int
+    ///
+    /// \param str      The number to cast
+    ///
+    /// \return         Return the number in an unsigned int
+    ///
+    ////////////////////////////////////////////////////////////
+    unsigned int my_atoi( char *str );
+
+    ////////////////////////////////////////////////////////////
     /// \brief      Write in error canal
     ///
     /// \param s    The string to be wrote
