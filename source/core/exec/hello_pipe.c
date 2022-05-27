@@ -37,8 +37,10 @@ void hello_pipe(mysh_t *mysh, command_t *command)
 
     for (unsigned int i = 0; i < pipe_count;
                                         i++, command = command->next_pipe) {
-        if (pipe(tube[i]) == -1)
+        if (pipe(tube[i]) == -1) {
             perror("pipe");
+            continue;
+        }
         close_dup(tube[i], STDOUT_FILENO);
         redirect_stdin(command);
         execution_command(mysh, &(*command));

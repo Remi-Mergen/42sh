@@ -73,8 +73,8 @@ static void get_command(mysh_t **mysh, command_t **command,
     fill_args(my_strcpy(input), *command, (*mysh));
     builtin_command_handler((*mysh), *command, builtin);
     define_path(my_strcpy(input), *command, (*mysh));
-    redirect_left_handler(input, command);
-    redirect_and_double_right_handler(input, command);
+    redirect_and_double_right_handler(*mysh, input, command);
+    redirect_left_handler(*mysh, input, command);
     return;
 }
 

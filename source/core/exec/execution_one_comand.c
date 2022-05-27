@@ -23,7 +23,8 @@ void execution_command(mysh_t *mysh, command_t *command)
         write(2, ": Command not found.\n", 21);
         mysh->last_return_value = 1;
         return;
-    }
+    } else if (command->return_value == -2)
+        return;
     pid = fork();
     if (pid == 0) {
         execve(command->path, command->args, command->env);
