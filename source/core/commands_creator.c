@@ -86,7 +86,7 @@ void commands_creator(mysh_t **mysh, char **env)
     char **list = my_stwa((*mysh)->input, ';');
 
     for (unsigned int i = 0; list[i]; ++i) {
-        if (!is_valid(list[i]))
+        if (!is_valid((*mysh), list[i]))
             continue;
         command = malloc(sizeof(command_t));
         init_command(&command, env);

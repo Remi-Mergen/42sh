@@ -156,29 +156,36 @@ SETUP=""
 CLEAN=""
 TESTS=
   echo "|"
-  echo " | "
 [914-END]
 
 [915]
+NAME="Only one | with spaces"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo " | "
+[915-END]
+
+[916]
 NAME="Only one <"
 SETUP=""
 CLEAN=""
 TESTS=
   echo "<"
-[915-END]
+[916-END]
 
-[916]
+[917]
 NAME="Only one >"
 SETUP=""
 CLEAN=""
 TESTS=
   echo ">"
-[916-END]
+[917-END]
 
-[917]
+[918]
 NAME="Only one >>"
 SETUP=""
 CLEAN=""
 TESTS=
   echo ">>"
-[917-END]
+[918-END]
