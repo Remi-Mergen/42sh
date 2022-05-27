@@ -7,9 +7,10 @@
 
 #include "lib.h"
 #include "struct.h"
-#include "redirect.h"
 #include "define.h"
 #include "stdlib.h"
+#include "is_valid.h"
+#include "redirect.h"
 #include "prototype.h"
 #include "add_command_in_end_of_list.h"
 static void get_command(mysh_t **mysh, command_t **command,
@@ -85,6 +86,8 @@ void commands_creator(mysh_t **mysh, char **env)
     char **list = my_stwa((*mysh)->input, ';');
 
     for (unsigned int i = 0; list[i]; ++i) {
+        if (!is_valid(list[i]))
+            continue;
         command = malloc(sizeof(command_t));
         init_command(&command, env);
         get_command(mysh, &command, list[i], env);

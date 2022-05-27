@@ -139,7 +139,7 @@ TESTS=
 [912-END]
 
 [913]
-NAME="Hard"
+NAME="mycat"
 SETUP="export PATH=$PWD"
 CLEAN=""
 TESTS=
@@ -149,3 +149,36 @@ TESTS=
   echo "/bin/wc -c /tmp/fic"
   echo "/bin/diff -N /home/retr0/file /tmp/fic"
 [913-END]
+
+[914]
+NAME="Only one |"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo "|"
+  echo " | "
+[914-END]
+
+[915]
+NAME="Only one <"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo "<"
+[915-END]
+
+[916]
+NAME="Only one >"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo ">"
+[916-END]
+
+[917]
+NAME="Only one >>"
+SETUP=""
+CLEAN=""
+TESTS=
+  echo ">>"
+[917-END]
