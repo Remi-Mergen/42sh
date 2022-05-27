@@ -34,12 +34,7 @@ static int error_handling(mysh_t *mysh, const char *input, command_t *command)
         if (input[x] == '<') {
             ++count;
             ++x;
-        } /* else if (input[x] == '|' && count != 0) {
-            write(2, "Ambiguous input redirect.\n", 27);
-            command->return_value = -2;
-            mysh->last_return_value = 1;
-            return -1;
-        } */
+        }
     }
     if (count > 1) {
         write(2, "Ambiguous input redirect.\n", 27);
